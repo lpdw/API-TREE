@@ -1,0 +1,25 @@
+{
+  "name": "api-tree",
+  "version": "1.0.0",
+  "description": "api to generate tree",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lpdw/API-TREE.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lpdw/API-TREE/issues"
+  },
+  "homepage": "https://github.com/lpdw/API-TREE#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "mongodb": "^2.2.28",
+    "mongoose": "^4.10.5"
+  }
+}
