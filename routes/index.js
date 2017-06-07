@@ -12,17 +12,22 @@ router.get('/',function(req,res,next){
 
 	  	var inputsSchema = new mongoose.Schema({
 		    date: Date,
-		    inputs: {
+		    inputs: [{
 		      label : String,
 		      value: String,
-		    }
+		    }]
 		});
 		var Input = mongoose.model('inputs', inputsSchema);
 		Input.count(function (err, count) {
 	    	if (err) return console.error(err);
 	    	console.log(count);
 	  	})
-	    var todo = new Input({date:new Date(),inputs:{label:1,value:1}});
+
+	 //  	Input.find(function (err, todos) {
+		//   if (err) return console.error(err);
+		//   console.log(todos)
+		// });
+	    var todo = new Input({date:new Date(),inputs:[{label:3,value:1},{label:2,value:0}]});
 		// Save it to database
 		todo.save(function(err){
 		  if(err)
