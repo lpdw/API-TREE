@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon bin/www"
+    "start": "node bin/www",
+    "startdev": "nodemon bin/www"
   },
   "repository": {
     "type": "git",
@@ -18,16 +19,17 @@
   },
   "homepage": "https://github.com/lpdw/API-TREE#readme",
   "dependencies": {
-    "express": "^4.15.3",
-    "mongodb": "^2.2.28",
-    "mongoose": "^4.10.5",
     "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.3",
+    "ejs": "^2.5.6",
+    "express": "^4.15.3",
     "express-session": "^1.15.2",
     "method-override": "^2.3.8",
-    "ejs": "^2.5.6",
+    "mongodb": "^2.2.28",
+    "mongoose": "^4.10.5",
     "morgan": "^1.8.1",
+    "mosquito": "^0.3.3",
     "serve-favicon": "^2.4.2"
   },
   "devDependencies": {
