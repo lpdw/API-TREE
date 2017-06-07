@@ -7,8 +7,11 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var methodOverride = require('method-override');
 var cors = require('cors')
+const mongoose = require('mongoose');
+const Inputs = require('./models/inputs');
 
 var index = require('./routes/index');
+var inputs = require('./routes/inputs');
 
 var app = express();
 
@@ -26,7 +29,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://lpat:4heW78svFtR4@ds111622.mlab.com:11622/api-tree');
+
 app.use('/', index);
+app.use('/inputs', inputs);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
