@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var methodOverride = require('method-override');
-var cors = require('cors')
+var cors = require('cors');
 const mongoose = require('mongoose');
 const Inputs = require('./models/inputs');
 
