@@ -14,4 +14,29 @@ router.get('/', (req, res, next) => {
   });
 });
 
+/* Create a new input page. */
+router.post('/', (req, res, next) => {
+  let input = {
+    date: new Date(),
+    inputs: [{
+        label: "Humeur",
+        value: 0,
+      },
+      {
+        label: "Sentiment",
+        value: 1,
+      },
+    ]
+  };
+  return db.get().collection('inputs').insertOne(input)
+  .then(input => {
+console.log(input);
+  })
+  .catch(err => {
+    console.log(err);
+  })
+});
+
+
+
 module.exports = router;
