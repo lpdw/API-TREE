@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node bin/www",
-    "startdev": "nodemon bin/www"
+    "dev": "nodemon bin/www"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,6 @@
     "express-session": "^1.15.2",
     "method-override": "^2.3.8",
     "mongodb": "^2.2.28",
-    "mongoose": "^4.10.5",
     "morgan": "^1.8.1",
     "mosquito": "^0.3.3",
     "mqtt": "^2.8.2",
@@ -35,6 +34,15 @@
     "mqtt": "^2.8.2"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^6.4.1",
+    "babel-register": "^6.18.0",
+    "eslint": "^3.18.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "nodemon": "^1.11.0",
+    "webpack": "^2.6.1"
   }
 }
