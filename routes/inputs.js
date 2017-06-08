@@ -47,6 +47,21 @@ router.post('/', (req, res, next) => {
   })
 });
 
+/* GET all inputs with label and value send. */
+router.get('/AllValue/:label/:value', (req, res, next) => {
+  	const Inputs = db.get().collection('inputs');
+  	Inputs.find({inputs:{ $elemMatch:{label:req.params.label,value:Number(req.params.value)}}},{date:1}).toArray().then(inputs => {
+    	res.status(200).send(inputs);
+  	});
+});
 
+/* GET nb input with label and value send. */
+router.get('/NbInput/:label/:value', (req, res, next) => {
+  	const Inputs = db.get().collection('inputs');
+  	Inputs.find({inputs:{ $elemMatch:{label:req.params.label,value:Number(req.params.value)}}}).count().then(inputs =>{
+  		console.log(inputs);
+    	res.status(200).send({result:inputs});	
+  	});
+});
 
 module.exports = router;
