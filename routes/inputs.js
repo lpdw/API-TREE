@@ -1,15 +1,16 @@
 'use strict';
 const express = require('express');
+const db = require('../db');
+
 const router = express.Router();
-const Inputs = require("../models/inputs");
+
 /* GET all inputs page. */
-router.get('/', function(req, res, next) {
-  Inputs.find(function(err, inputs) {
-    if(err)
-    return res.status(400);
-    if (req.accepts('application/json')) {
-        return res.status(200).send(inputs);
-    }
+router.get('/', (req, res, next) => {
+  const Inputs = db.get().collection('inputs');
+  Inputs.find().toArray().then(inputs => {
+    res.status(200).send(inputs);
+    // console.log(projects);
+    // res.render('projects', { projects: projects });
   });
 });
 

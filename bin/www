@@ -4,9 +4,10 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('api-tree:server');
-var http = require('http');
+const app = require('../app');
+const debug = require('debug')('api-tree:server');
+const http = require('http');
+const db = require('../db');
 
 /**
  * Get port from environment and store in Express.
@@ -22,12 +23,24 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Connect to database
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+db.connect('mongodb://lpat:4heW78svFtR4@ds111622.mlab.com:11622/api-tree', (err) => {
+  if (err) {
+    console.log('Unable to connect to Mongo.');
+  } else {
+    console.log('Connected to database');
+    /**
+     * Listen on provided port, on all network interfaces.
+     */
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+  }
+});
+
+
 
 /**
  * Normalize a port into a number, string, or false.
