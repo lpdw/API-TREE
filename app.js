@@ -1,4 +1,4 @@
-const express = require('express');
+  const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
@@ -9,9 +9,8 @@ const methodOverride = require('method-override');
 const cors = require('cors')
 const index = require('./routes/index');
 const inputs = require('./routes/inputs');
-
+const arduino = require('./arduino');
 const app = express();
-
 app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
