@@ -1,7 +1,16 @@
 <div class="bgBody">
     <div class="form form-horizontal">
-        <div class="text-center">
+        <div id="text-center">
             <h1>Bienvenue sur l'API TREE !</h1>
         </div>
     </div>
 </div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect(window.location.origin);
+  socket.emit("connected","moi");
+  socket.on('new_inputs', function (data) {
+    document.getElementById('text-center').innerHTML=JSON.stringify(data);
+    console.log(data);
+  });
+</script>

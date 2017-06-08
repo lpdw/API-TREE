@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
@@ -42,6 +41,9 @@ db.connect('mongodb://lpat:4heW78svFtR4@ds111622.mlab.com:11622/api-tree', (err)
     server.listen(port);
     server.on('error', onError);
     server.on('listening', onListening);
+    app.io = require('socket.io')(server);
+
+    // app.io.attach(server);
   }
 });
 
