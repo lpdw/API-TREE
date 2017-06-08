@@ -8,7 +8,11 @@ const app = require('../app');
 const debug = require('debug')('api-tree:server');
 const http = require('http');
 const db = require('../db');
+const mqtt = require('mqtt');
+const deviceRoot = 'demo/device/';
 
+let collection;
+let client;
 /**
  * Get port from environment and store in Express.
  */
@@ -31,6 +35,7 @@ db.connect('mongodb://lpat:4heW78svFtR4@ds111622.mlab.com:11622/api-tree', (err)
     console.log('Unable to connect to Mongo.');
   } else {
     console.log('Connected to database');
+
     /**
      * Listen on provided port, on all network interfaces.
      */
@@ -40,7 +45,10 @@ db.connect('mongodb://lpat:4heW78svFtR4@ds111622.mlab.com:11622/api-tree', (err)
   }
 });
 
-
+function insertEvent(topic, payload) {
+  console.log(topic);
+  console.log(payload);
+}
 
 /**
  * Normalize a port into a number, string, or false.
@@ -71,9 +79,9 @@ function onError(error) {
     throw error;
   }
 
-  const bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  const bind = typeof port === 'string' ?
+    'Pipe ' + port :
+    'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -96,8 +104,8 @@ function onError(error) {
 
 function onListening() {
   const addr = server.address();
-  const bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  const bind = typeof addr === 'string' ?
+    'pipe ' + addr :
+    'port ' + addr.port;
   debug('Listening on ' + bind);
 }
