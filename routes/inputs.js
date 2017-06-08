@@ -30,7 +30,7 @@ router.post('/', (req, res, next) => {
   };
   return db.get().collection('inputs').insertOne(input)
   .then(input => {
-console.log(input);
+      res.status(200).send({"insertedCount":input.insertedCount,"insertedId":input.insertedId});
   })
   .catch(err => {
     console.log(err);
