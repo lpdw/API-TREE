@@ -5,7 +5,7 @@ const InputSchema = new Schema({
   date: Date,
   inputs: [{
     label : String,
-    value: String,
+    value: Number,
   }]
 });
 

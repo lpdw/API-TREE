@@ -9,13 +9,19 @@ const methodOverride = require('method-override');
 const cors = require('cors')
 const index = require('./routes/index');
 const inputs = require('./routes/inputs');
+const db = require('./db');
+const mqtt = require('mqtt');
 
+let client;
+const deviceRoot = 'demo/device/';
 const app = express();
-
+app.io = require('socket.io')();
 app.use(cors());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('socketio', app.io);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -51,6 +57,35 @@ app.use(function(err, req, res, next) {
   }
   res.send(res.locals.message);
 });
+;
 
+client = mqtt.connect('http://localhost');
+
+client.on('connect', function() {
+  // On souscrit au device arduino (données de test)
+
+  client.subscribe(deviceRoot+"arduino");
+  // A la réception d'un objet, on l'enregistre en base de données
+  // Pour tester l'envoie de message : lancer la commande  (il faut avoir installer mqtt en -general)
+  // mqtt_pub -h "localhost" -t "demo/device/arduino" -m '{"date": "2017-06-08T08:30:19.911Z","inputs": [{"label": "Arduino","value": 0},{"label": "Sentiment","value": 1}]}'
+  client.on('message', function (topic, message) {
+    let input =JSON.parse((message.toString()));
+    // On insert l'input reçut par l'arduino
+    db.get().collection('inputs').insertOne(input)
+    .then(insert => {
+      // On récupère l'objet enregistré
+      db.get().collection('inputs').findOne({_id:insert.insertedId})
+      .then(input => {
+        // On envoie le socket pour actualiser l'arbre
+        app.io.emit("new_inputs",input);
+      });
+        console.log({"insertedCount":insert.insertedCount,"insertedId":insert.insertedId});
+    })
+    .catch(err => {
+      console.log(err);
+    });
+    // client.end();
+  });
+});
 
 module.exports = app;
