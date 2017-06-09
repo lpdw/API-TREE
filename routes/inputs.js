@@ -62,8 +62,24 @@ router.get('/NbInput/:label/:value', (req, res, next) => {
   	const Inputs = db.get().collection('inputs');
   	Inputs.find({inputs:{ $elemMatch:{label:req.params.label,value:Number(req.params.value)}}}).count().then(inputs =>{
   		console.log(inputs);
-    	res.status(200).send({result:inputs});	
+    	res.status(200).send({result:inputs});
   	});
+});
+
+// GET previous inputs to sent date
+router.get('/BeforeDate/:date', (req, res, next) => {
+    const Inputs = db.get().collection('inputs');
+    Inputs.find(
+        {
+            date: {
+                "$lte": new Date(req.params.date)
+            }
+        }
+    ).toArray().then(inputs => {
+        console.log(inputs);
+        res.status(200).send({inputs});
+    }).catch(err=>{console.log(err);});
+
 });
 
 module.exports = router;
