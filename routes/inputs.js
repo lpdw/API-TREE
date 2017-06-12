@@ -19,19 +19,24 @@ router.get('/', (req, res, next) => {
 
 /* Create a new input page. */
 router.post('/', (req, res, next) => {
+  console.log(req.body.inputs);
   const Inputs = db.get().collection('inputs');
-
-  let input = {
+  //
+  // let input = {
+  //   date: new Date(),
+  //   inputs: [{
+  //       label: "Humeur",
+  //       value: 0,
+  //     },
+  //     {
+  //       label: "Sentiment",
+  //       value: 1,
+  //     },
+  //   ]
+  // };
+  const input = {
     date: new Date(),
-    inputs: [{
-        label: "Humeur",
-        value: 0,
-      },
-      {
-        label: "Sentiment",
-        value: 1,
-      },
-    ]
+    inputs: req.body.inputs
   };
   // On enregistre l'input dans la base de données
   Inputs.insertOne(input)
@@ -46,7 +51,7 @@ router.post('/', (req, res, next) => {
   })
   .catch(err => {
     console.log(err);
-  })
+  });
 });
 
 /* GET all inputs with label and value send. */
