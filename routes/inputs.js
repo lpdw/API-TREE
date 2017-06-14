@@ -20,6 +20,7 @@ router.get('/', (req, res, next) => {
 /* Create a new input page. */
 router.post('/', (req, res, next) => {
   console.log(req.body.inputs);
+  console.log(req.body);
   const Inputs = db.get().collection('inputs');
   //
   // let input = {
