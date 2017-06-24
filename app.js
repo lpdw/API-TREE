@@ -9,6 +9,8 @@ const methodOverride = require('method-override');
 const cors = require('cors')
 const index = require('./routes/index');
 const inputs = require('./routes/inputs');
+const words = require('./routes/words');
+const stats = require('./routes/stats');
 const db = require('./db');
 const mqtt = require('mqtt');
 
@@ -34,6 +36,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/inputs', inputs);
+app.use('/words', words);
+app.use('/stats', stats);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

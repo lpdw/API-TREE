@@ -5,12 +5,10 @@ const db = require('../db');
 const router = express.Router();
 
 
-
 /* GET all inputs page. */
 router.get('/', (req, res, next) => {
   const Inputs = db.get().collection('inputs');
-
-  Inputs.find().toArray().then(inputs => {
+  Inputs.find().toArray().then((inputs) => {
     res.status(200).send(inputs);
     // console.log(projects);
     // res.render('projects', { projects: projects });
@@ -19,57 +17,35 @@ router.get('/', (req, res, next) => {
 
 /* Create a new input page. */
 router.post('/', (req, res, next) => {
-  console.log(req.body.inputs);
-  console.log(req.body);
+
   const Inputs = db.get().collection('inputs');
-  //
-  // let input = {
-  //   date: new Date(),
-  //   inputs: [{
-  //       label: "Humeur",
-  //       value: 0,
-  //     },
-  //     {
-  //       label: "Sentiment",
-  //       value: 1,
-  //     },
-  //   ]
-  // };
-  const input = {
-    date: new Date(),
-    inputs: req.body.inputs
-  };
-  // On enregistre l'input dans la base de données
-  Inputs.insertOne(input)
-  .then(insert => {
-    // On récupère les données enregistrées
-    Inputs.findOne({_id:insert.insertedId})
-    .then(input => {
-      // On envoie le socket pour actualiser l'arbre
-      req.app.io.emit("new_inputs",input);
+  const Words = db.get().collection('words');
+
+  // 1. Premier contrôle nombre de mots
+  if (req.body.words.length !== 6) return res.status(400).send("Vous n'avez pas saisi le bon nombre de mots");
+  // 2. Deuxième contrôle si tous les mots existent
+  Words.find({ key: { $in: req.body.words } }, { _id: 0, word: 0, mood:0 }).count((err, count) => {
+    if (err) return res.status(500).send();
+    if (count < 6) return res.status(400).send('Au moins une des clés envoyées ne correspond à aucun mot.');
+    const newInput = {
+      date: new Date(),
+      words: req.body.words
+    };
+    // On enregistre l'input dans la base de données
+    Inputs.insertOne(newInput)
+    .then((insert) => {
+      // On récupère les données enregistrées
+      Inputs.findOne({ _id: insert.insertedId })
+      .then((input) => {
+        // On envoie le socket pour actualiser l'arbre
+        req.app.io.emit('new_inputs',input);
+      });
+      return res.status(200).send({ insertedCount: insert.insertedCount, insertedId: insert.insertedId });
+    })
+    .catch(err => {
+      console.log(err);
     });
-      res.status(200).send({"insertedCount":insert.insertedCount,"insertedId":insert.insertedId});
-  })
-  .catch(err => {
-    console.log(err);
   });
-});
-
-/* GET all inputs with label and value send. */
-router.get('/AllValue/:label/:value', (req, res, next) => {
-  	const Inputs = db.get().collection('inputs');
-  	Inputs.find({inputs:{ $elemMatch:{label:req.params.label,value:Number(req.params.value)}}},{date:1}).toArray().then(inputs => {
-    	res.status(200).send(inputs);
-  	});
-});
-
-/* GET nb input with label and value send. */
-router.get('/NbInput/:label/:value', (req, res, next) => {
-  	const Inputs = db.get().collection('inputs');
-  	Inputs.find({inputs:{ $elemMatch:{label:req.params.label,value:Number(req.params.value)}}}).count().then(inputs =>{
-  		console.log(inputs);
-    	res.status(200).send({result:inputs});
-  	});
 });
 
 // GET previous inputs to sent date
@@ -82,10 +58,13 @@ router.get('/BeforeDate/:date', (req, res, next) => {
             }
         }
     ).toArray().then(inputs => {
-        console.log(inputs);
+
         res.status(200).send({inputs});
     }).catch(err=>{console.log(err);});
 
 });
+
+
+
 
 module.exports = router;
