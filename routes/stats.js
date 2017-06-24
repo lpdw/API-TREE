@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/count', (req, res, next) => {
   const Inputs = db.get().collection('inputs');
   const Words = db.get().collection('words');
-  let words = [];
+  // let words = [];
   // On récupère tous les mots
   Words.find({}).sort({
     key: 1
@@ -25,30 +25,12 @@ router.get('/count', (req, res, next) => {
       }).count((err, count) => {
         if (err) throw err;
         word.count = count;
-        words.push(word);
-        if (index === wordsFound.length - 1) res.status(200).send(words);
+
+        if (index === wordsFound.length - 1) return res.status(200).send(wordsFound);
       });
     });
   });
 });
 
-/** OLD ROUTES TO UPDATE **/
-
-
-// GET previous inputs to sent date
-router.get('/BeforeDate/:date', (req, res, next) => {
-    const Inputs = db.get().collection('inputs');
-    Inputs.find(
-        {
-            date: {
-                "$lte": new Date(req.params.date)
-            }
-        }
-    ).toArray().then(inputs => {
-        console.log(inputs);
-        res.status(200).send({inputs});
-    }).catch(err=>{console.log(err);});
-
-});
 
 module.exports = router;
