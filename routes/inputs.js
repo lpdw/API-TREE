@@ -23,6 +23,11 @@ router.post('/', (req, res, next) => {
   const wordsLenght = req.body.word.length;
   // 1. Premier contrôle nombre de mots (6 ou moins)
   if (req.body.words.length > 6) return res.status(400).send("Vous n'avez pas saisi le bon nombre de mots");
+
+  Words.find({ key: { $in: req.body.words }, mood: true }).count((err, count) => {
+    if (err) return res.status(500).send();
+    if (count > 2) return res.status(400).send('Vous ne pouvez sélectionner plus de deux humeurs');
+  });
   // 2. Deuxième contrôle si tous les mots existent
   Words.find({ key: { $in: req.body.words } }, { _id: 0, word: 0, mood: 0 }).count((err, count) => {
     if (err) return res.status(500).send();
