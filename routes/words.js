@@ -18,8 +18,6 @@ router.get('/', (req, res, next) => {
 
 router.get('/getbykey/:key', (req, res, next) => {
   const Words = db.get().collection('words');
-  console.log(req.params.key);
-
   Words.findOne({ key: parseInt(req.params.key) })
   .then((word) => {
     res.status(200).send(word);
