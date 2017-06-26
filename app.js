@@ -41,8 +41,6 @@ app.use('/stats', stats);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  console.log(req);
-  console.log(res);
   const err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -56,9 +54,9 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  if (req.accepts('text/html')) {
-    return res.render('error');
-  }
+  // if (req.accepts('text/html')) {
+  //   return res.render('error');
+  // }
   res.send(res.locals.message);
 });
 
