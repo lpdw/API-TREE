@@ -19,7 +19,8 @@ router.post('/', (req, res, next) => {
   const Inputs = db.get().collection('inputs');
   const Words = db.get().collection('words');
   const wordsSent = req.body.words.filter(word => word > 0);
-
+  console.log(req.body.words);
+  console.log(wordsSent);
   // 1. Premier contrôle nombre de mots (6 ou moins)
   if (wordsSent.length > 6) return res.status(400).send('Vous ne pouvez saisir que 6 mots.');
 
