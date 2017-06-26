@@ -1,4 +1,5 @@
-"use strict";
+
+
 const express = require('express');
 const db = require('../db');
 
@@ -15,13 +16,20 @@ router.get('/', (req, res, next) => {
   });
 });
 
-router.get('/:key',(req,res,next)=>{
+router.get('/getbykey/:key', (req, res, next) => {
   const Words = db.get().collection('words');
+  console.log(req.params.key);
 
-  Words.find({ number: req.params.key }).then((word) => {
+  Words.findOne({ key: parseInt(req.params.key) })
+  .then((word) => {
     res.status(200).send(word);
-    // console.log(projects);
-    // res.render('projects', { projects: projects });
+  });
+});
+
+router.get('/getbyword/:word', (req, res, next) => {
+  const Words = db.get().collection('words');
+  Words.findOne({ word: req.params.word }).then((word) => {
+    res.status(200).send(word);
   });
 });
 module.exports = router;
