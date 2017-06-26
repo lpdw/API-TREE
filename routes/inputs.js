@@ -18,24 +18,22 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const Inputs = db.get().collection('inputs');
   const Words = db.get().collection('words');
-  const wordsLenght = req.body.words.length;
-  console.log(req.body);
-  console.log(req.body.words);
-  console.log(req.body.words.length);
-  // 1. Premier contrôle nombre de mots (6 ou moins)
-  if (req.body.words.length > 6) return res.status(400).send('Vous ne pouvez saisir que 6 mots.');
+  const wordsSent = req.body.words.filter(word => word > 0);
 
-  Words.find({ key: { $in: req.body.words }, mood: true }).count((err, count) => {
+  // 1. Premier contrôle nombre de mots (6 ou moins)
+  if (wordsSent.length > 6) return res.status(400).send('Vous ne pouvez saisir que 6 mots.');
+
+  Words.find({ key: { $in: wordsSent }, mood: true }).count((err, count) => {
     if (err) return res.status(500).send();
     if (count > 2) return res.status(400).send('Vous ne pouvez sélectionner plus de deux humeurs');
   });
   // 2. Deuxième contrôle si tous les mots existent
-  Words.find({ key: { $in: req.body.words } }, { _id: 0, word: 0, mood: 0 }).count((err, count) => {
+  Words.find({ key: { $in: wordsSent } }, { _id: 0, word: 0, mood: 0 }).count((err, count) => {
     if (err) return res.status(500).send();
-    if (count < wordsLenght) return res.status(400).send('Au moins une des clés envoyées ne correspond à aucun mot.');
+    if (count < wordsSent.length) return res.status(400).send('Au moins une des clés envoyées ne correspond à aucun mot.');
     const newInput = {
       date: new Date(),
-      words: req.body.words,
+      words: wordsSent,
     };
     // On enregistre l'input dans la base de données
     Inputs.insertOne(newInput)
