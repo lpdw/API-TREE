@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const db = require('../db');
 
@@ -20,9 +18,9 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const Inputs = db.get().collection('inputs');
   const Words = db.get().collection('words');
-  const wordsLenght = req.body.word.length;
+  const wordsLenght = req.body.words.length;
   // 1. Premier contrôle nombre de mots (6 ou moins)
-  if (req.body.words.length > 6) return res.status(400).send("Vous n'avez pas saisi le bon nombre de mots");
+  if (req.body.words.length > 6) return res.status(400).send('Vous ne pouvez saisir que 6 mots.');
 
   Words.find({ key: { $in: req.body.words }, mood: true }).count((err, count) => {
     if (err) return res.status(500).send();
@@ -61,8 +59,7 @@ router.get('/BeforeDate/:date', (req, res, next) => {
       date: {
         $lte: new Date(req.params.date),
       },
-    },
-    ).toArray().then((inputs) => {
+    }).toArray().then((inputs) => {
       res.status(200).send({ inputs });
     }).catch((err) => { console.log(err); });
 });
