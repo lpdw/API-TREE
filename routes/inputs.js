@@ -42,8 +42,8 @@ router.post('/', (req, res, next) => {
       .then((input) => {
         // On envoie le socket pour actualiser l'arbre
         req.app.io.emit('new_inputs', input.words);
+        return res.status(200).send({ insertedCount: insert.insertedCount, insertedId: insert.insertedId });
       });
-      return res.status(200).send({ insertedCount: insert.insertedCount, insertedId: insert.insertedId });
     })
     .catch((err) => {
       console.log(err);
