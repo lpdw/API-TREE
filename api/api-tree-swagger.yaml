@@ -1,0 +1,126 @@
+swagger: '2.0'
+info:
+  description: Tree-Project API
+  version: 1.0.0
+  title: API-TREE
+  
+  contact:
+    email: paulvialart@gmail.com
+
+
+# Added by API Auto Mocking Plugin
+# host: api-tree.herokuapp.com
+
+# basePath: /
+schemes:
+  - https
+consumes: 
+  - application/json
+produces:
+  - application/json
+    
+
+paths:
+  /inputs:
+    get:
+      summary: returns a collection of inputs
+      description : |
+        There is no options here, the route just return all the existing inputs
+      produces: 
+      - application/json
+      responses:
+        200: 
+          description: An array of inputs
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Inputs'
+    post:
+      summary: create a new input page
+      description: Adds a new input to the database and send a socket if succeeded
+      parameters:
+      - in: query
+        name: param_name
+        description: description
+        required: false
+        type: string
+      responses: 
+        200: 
+          description: input inserted + socket send 
+        400:
+          description: invalid input, too many words OR one of the send key doesnot correspond to any word
+        500:
+          description: invalid input, 2 humors max required
+  
+  /words:
+    get:
+      summary: get all words
+      description: Returns an array filled with the existing words
+      responses:
+        200:
+          description: request succeeded
+          
+  #/words/getbykey/:
+  
+  #/wors/getbywords/
+          
+  /inputs/beforedate:
+    get:
+      summary: get inputs before the send date
+      description: The endpoint returns all the inputs created before the date, so the admin can see the tree state at a choosen point in the time
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: date
+        required: true
+        type: string
+        format: YYYY-mm-DD
+      responses: 
+        200: 
+          description: the dates were correctly returned
+        
+  /count:
+    get:
+      description: |
+        Get all inputs page
+      responses:
+        200:
+          description: #stats.js
+          schema:
+            type: array
+            words:
+              $ref: '#/definitions/Words'
+
+          
+definitions:
+  Words:
+    type: object
+    properties:
+      _id:
+        type: object
+        example: ObjectId("594d604008703d7dd64c43b5")
+      word:
+        type: string
+        example: Joie
+      key:
+        type: number
+        example: 4
+      mood:
+        type: boolean
+        
+  Inputs:
+    type: object
+    properties:
+      _id:
+        type: object
+      date:
+        type: string
+        format: int32
+        example: 2017-06-23 19:40:02.810Z
+      word:
+        type: array
+        $ref: '#definitions/Words'
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /Vaultz/api-tree2/1.0.0

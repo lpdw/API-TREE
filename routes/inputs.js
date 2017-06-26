@@ -54,7 +54,7 @@ router.post('/', (req, res, next) => {
 });
 
 // GET previous inputs to sent date
-router.get('/BeforeDate/:date', (req, res, next) => {
+router.get('/beforedate/:date', (req, res, next) => {
   const Inputs = db.get().collection('inputs');
   Inputs.find(
     {
