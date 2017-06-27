@@ -3,8 +3,8 @@ info:
   description: Tree-Project API
   version: 1.0.0
   title: API-TREE
-# host: api-tree.herokuapp.com
-# basePath: /
+host: api-tree.herokuapp.com
+basePath: /
 schemes:
   - https
 consumes:
@@ -154,6 +154,3 @@ definitions:
       word:
         type: array
         $ref: '#definitions/Words'
-# Added by API Auto Mocking Plugin
-host: virtserver.swaggerhub.com
-basePath: /Vaultz/api-tree2/1.0.0
