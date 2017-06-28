@@ -27,28 +27,28 @@ router.post('/', (req, res, next) => {
   Words.find({ key: { $in: wordsSent }, mood: true }).count((err, count) => {
     if (err) return res.status(500).send();
     if (count > 2) return res.status(400).send('Vous ne pouvez sélectionner plus de deux humeurs');
-  });
-  // 2. Deuxième contrôle si tous les mots existent
-  Words.find({ key: { $in: wordsSent } }, { _id: 0, word: 0, mood: 0 }).count((err, count) => {
-    if (err) return res.status(500).send();
-    if (count < wordsSent.length) return res.status(400).send('Au moins une des clés envoyées ne correspond à aucun mot.');
-    const newInput = {
-      date: new Date(),
-      words: wordsSent,
-    };
-    // On enregistre l'input dans la base de données
-    Inputs.insertOne(newInput)
-    .then((insert) => {
-      // On récupère les données enregistrées
-      Inputs.findOne({ _id: insert.insertedId })
-      .then((input) => {
-        // On envoie le socket pour actualiser l'arbre
-        req.app.io.emit('new_inputs', input.words);
-        return res.status(200).send({ insertedCount: insert.insertedCount, insertedId: insert.insertedId });
+    // 2. Deuxième contrôle si tous les mots existent
+    Words.find({ key: { $in: wordsSent } }, { _id: 0, word: 0, mood: 0 }).count((err, count) => {
+      if (err) return res.status(500).send();
+      if (count < wordsSent.length) return res.status(400).send('Au moins une des clés envoyées ne correspond à aucun mot.');
+      const newInput = {
+        date: new Date(),
+        words: wordsSent,
+      };
+      // On enregistre l'input dans la base de données
+      Inputs.insertOne(newInput)
+      .then((insert) => {
+        // On récupère les données enregistrées
+        Inputs.findOne({ _id: insert.insertedId })
+        .then((input) => {
+          // On envoie le socket pour actualiser l'arbre
+          req.app.io.emit('new_inputs', input.words);
+          return res.status(200).send({ insertedCount: insert.insertedCount, insertedId: insert.insertedId });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
     });
   });
 });
