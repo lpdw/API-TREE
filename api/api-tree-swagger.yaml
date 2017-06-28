@@ -1,0 +1,156 @@
+swagger: '2.0'
+info:
+  description: Tree-Project API
+  version: 1.0.0
+  title: API-TREE
+host: api-tree.herokuapp.com
+basePath: /
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+
+paths:
+  /inputs:
+    get:
+      summary: returns a collection of inputs
+      description : |
+        There is no options here, the route just return all the existing inputs
+      produces:
+      - application/json
+      responses:
+        200:
+          description: An array of inputs
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Inputs'
+    post:
+      summary: create a new input page
+      description: Adds a new input to the database and send a socket if succeeded
+      parameters:
+      - in: query
+        name: param_name
+        description: description
+        required: false
+        type: string
+      responses:
+        200:
+          description: input inserted + socket send
+        400:
+          description: invalid input, too many words OR one of the send key doesnot correspond to any word
+        500:
+          description: invalid input, 2 humors max required
+
+  /words:
+    get:
+      summary: get all words
+      description: Returns an array filled with the existing words
+      responses:
+        200:
+          description: request succeeded
+          schema:
+            type: array
+            items:
+              type: object
+
+  /words/getbykey:
+    get:
+      summary: get corresponding word
+      description: This route returns the Word object corresponding to the passed key
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: key
+        required: true
+        type: number
+      responses:
+        200:
+          description: The research went good and returned the proper word
+          schema:
+            $ref: "#/definitions/Words"
+
+  /words/getbyword:
+    get:
+      summary: get worresponding word
+      description: The endpoint returns the Word object corresponding to the given string
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: word
+        required: true
+        type: string
+      responses:
+        200:
+          description: The research went good and returned the proper word
+          schema:
+            $ref: "#/definitions/Words"
+
+  /inputs/beforedate:
+    get:
+      summary: get inputs before the send date
+      description: The endpoint returns all the inputs created before the date, so the admin can see the tree state at a choosen point in the time
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: date
+        required: true
+        type: string
+        format: YYYY-mm-DD
+      responses:
+        200:
+          description: the dates were correctly returned
+          schema:
+            type: array
+            items:
+              type: object
+
+  /stats/count:
+    get:
+      summary: get the words number
+      description: Returns all words and how many time they appear in database
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+
+
+definitions:
+  Words:
+    type: object
+    properties:
+      _id:
+        type: object
+        example: ObjectId("594d604008703d7dd64c43b5")
+      word:
+        type: string
+        example: Joie
+      key:
+        type: number
+        example: 4
+      mood:
+        type: boolean
+
+  Inputs:
+    type: object
+    properties:
+      _id:
+        type: object
+      date:
+        type: string
+        format: int32
+        example: 2017-06-23 19:40:02.810Z
+      word:
+        type: array
+        $ref: '#definitions/Words'
